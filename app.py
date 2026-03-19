@@ -30,14 +30,20 @@ st.set_page_config(
 def load_model():
     from huggingface_hub import hf_hub_download
     import os
+    import json
     HF_REPO = "dfgdsgbngg/battery-usability-model"
-    if not os.path.exists("battery_model_v2.h5"):
-        hf_hub_download(repo_id=HF_REPO, filename="battery_model_v2.h5", local_dir=".")
+    if not os.path.exists("battery_weights.weights.h5"):
+        hf_hub_download(repo_id=HF_REPO, filename="battery_weights.weights.h5", local_dir=".")
+    if not os.path.exists("model_architecture.json"):
+        hf_hub_download(repo_id=HF_REPO, filename="model_architecture.json", local_dir=".")
     if not os.path.exists("scaler_X.pkl"):
         hf_hub_download(repo_id=HF_REPO, filename="scaler_X.pkl", local_dir=".")
     if not os.path.exists("scaler_y.pkl"):
         hf_hub_download(repo_id=HF_REPO, filename="scaler_y.pkl", local_dir=".")
-    model = tf.keras.models.load_model("battery_model_v2.h5")
+    with open("model_architecture.json", "r") as f:
+        model_json = json.load(f)
+    model = tf.keras.models.model_from_json(model_json)
+    model.load_weights("battery_weights.weights.h5")
     with open("scaler_X.pkl", "rb") as f:
         scaler_X = pickle.load(f)
     with open("scaler_y.pkl", "rb") as f:
