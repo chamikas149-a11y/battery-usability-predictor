@@ -1,3 +1,13 @@
+import os
+from huggingface_hub import hf_hub_download
+
+if not os.path.exists("battery_lstm_final.keras"):
+    hf_hub_download(repo_id="dfgdsgbngg/battery-usability-model", filename="battery_lstm_final.keras", local_dir=".")
+if not os.path.exists("scaler_X.pkl"):
+    hf_hub_download(repo_id="dfgdsgbngg/battery-usability-model", filename="scaler_X.pkl", local_dir=".")
+if not os.path.exists("scaler_y.pkl"):
+    hf_hub_download(repo_id="dfgdsgbngg/battery-usability-model", filename="scaler_y.pkl", local_dir=".")
+
 import streamlit as st
 import numpy as np
 import pickle
@@ -9,7 +19,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import tempfile
-import os
 
 st.set_page_config(
     page_title="Battery Usability Predictor",
@@ -19,6 +28,15 @@ st.set_page_config(
 
 @st.cache_resource
 def load_model():
+    from huggingface_hub import hf_hub_download
+    import os
+    HF_REPO = "dfgdsgbngg/battery-usability-model"
+    if not os.path.exists("battery_lstm_final.keras"):
+        hf_hub_download(repo_id=HF_REPO, filename="battery_lstm_final.keras", local_dir=".")
+    if not os.path.exists("scaler_X.pkl"):
+        hf_hub_download(repo_id=HF_REPO, filename="scaler_X.pkl", local_dir=".")
+    if not os.path.exists("scaler_y.pkl"):
+        hf_hub_download(repo_id=HF_REPO, filename="scaler_y.pkl", local_dir=".")
     model = tf.keras.models.load_model("battery_lstm_final.keras")
     with open("scaler_X.pkl", "rb") as f:
         scaler_X = pickle.load(f)
