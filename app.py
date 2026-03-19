@@ -41,7 +41,7 @@ def load_model():
     if not os.path.exists("scaler_y.pkl"):
         hf_hub_download(repo_id=HF_REPO, filename="scaler_y.pkl", local_dir=".")
     with open("model_architecture.json", "r") as f:
-        model_json = json.load(f)
+        model_json = f.read()
     model = tf.keras.models.model_from_json(model_json)
     model.load_weights("battery_weights.weights.h5")
     with open("scaler_X.pkl", "rb") as f:
