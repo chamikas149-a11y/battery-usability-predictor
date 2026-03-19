@@ -5,3 +5,4 @@ scikit-learn
 plotly
 fpdf2
 matplotlib
+huggingface_hub
